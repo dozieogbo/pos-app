@@ -9,6 +9,7 @@
 namespace App;
 
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
@@ -34,15 +35,16 @@ class Helper
      * @param $img
      * @return string
      */
-    public static function saveImage($folderUrl, $img){
+    public static function saveImage($folderUrl, UploadedFile $img){
 
         if (!File::exists($folderUrl)) {
             File::makeDirectory($folderUrl, 777, true);
         }
 
-        $filename = time() . "-";
+        $filename = time().'.'.$img->getClientOriginalExtension();
         $relUrl = $folderUrl . $filename;
         $filePath = public_path($relUrl);
+
         Image::make($img->getRealPath())->fit(200, 200)->save($filePath);
         return $relUrl;
     }
