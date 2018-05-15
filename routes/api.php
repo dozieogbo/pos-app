@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::put('categories/{id}/toggle/{status}', ['uses' => 'CategoryController@toggleStatus', 'as' => 'categories.status']);
 Route::get('categories/active', ['uses' => 'CategoryController@active', 'as' => 'categories.active']);
 
+Route::put('payment_types/{id}/toggle/{status}', ['uses' => 'PaymentTypeController@toggleStatus', 'as' => 'payment_types.status']);
+Route::get('payment_types/active', ['uses' => 'PaymentTypeController@active', 'as' => 'payment_types.categories.active']);
+
 Route::put('states/{id}/toggle/{status}', ['uses' => 'StateController@toggleStatus', 'as' => 'states.status']);
 Route::get('states/active', ['uses' => 'StateController@active', 'as' => 'states.active']);
 
@@ -52,6 +55,7 @@ Route::apiResources([
     'products' => 'ProductController',
     'branches' => 'BranchController',
     'categories' => 'CategoryController',
+    'payment_types' => 'PaymentTypeController',
     'states' => 'StateController',
     'staffs' => 'StaffController',
     'suppliers' => 'SupplierController',

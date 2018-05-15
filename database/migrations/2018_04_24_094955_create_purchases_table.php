@@ -22,6 +22,7 @@ class CreatePurchasesTable extends Migration
             $table->integer('branch_id')->unsigned();
             $table->foreign('branch_id')->references('id')->on('branches');
             $table->boolean('is_active')->default(false);
+            $table->decimal('amount_paid', 15, 2);
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Http\Requests\PurchaseRequest;
+use App\PaymentType;
 use App\Purchase;
 use App\PurchaseDetail;
 use Exception;
@@ -32,9 +33,9 @@ class PurchaseController extends Controller
      */
     public function index($branch = null)
     {
-        if($branch){
+        if ($branch) {
             $purchases = Purchase::with(['branch', 'customer'])->inBranch($branch)->paginate(30);
-        }else{
+        } else {
             $purchases = Purchase::with(['branch', 'customer'])->paginate(30);
         }
 
@@ -43,9 +44,9 @@ class PurchaseController extends Controller
 
     public function active($branch = null)
     {
-        if($branch){
+        if ($branch) {
             $purchases = Purchase::with(['branch', 'customer'])->active()->inBranch($branch)->paginate(30);
-        }else{
+        } else {
             $purchases = Purchase::with(['branch', 'customer'])->active()->paginate(30);
         }
 
@@ -62,25 +63,16 @@ class PurchaseController extends Controller
     {
         $data = $request->validated();
 
-        $details = $data['details'];
+        $payType = PaymentType
+            ::hasName($data['name']);
 
-        $details = array_map(function($detail){
-            return new PurchaseDetail($detail);
-        }, $details);
+        if (!$payType) {
+            return $this->failure("Payment type doesn't exist");
+        }
 
-        $purchase = new Purchase([
-            'created_by' => Helper::getUserId(),
-            'customer_id' => $data['customer'],
-            'branch_id' => $data['branch'],
-            'is_active' => true
-        ]);
-
-        try{
-            DB::transaction(function() use ($purchase, $details){
-                $purchase->save();
-                $purchase->details()->saveMany($details);
-            });
-        }catch(Exception $bug){
+        try {
+            $purchase = $this->createPurchase($data, $payType);
+        } catch (Exception $bug) {
             return $this->exception($bug);
         }
 
@@ -90,14 +82,14 @@ class PurchaseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $resource = Purchase::with('details')->find($id);
 
-        if(!$resource){
+        if (!$resource) {
             return $this->notFound();
         }
 
@@ -108,14 +100,14 @@ class PurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $resource = Purchase::find($id);
 
-        if(!$resource){
+        if (!$resource) {
             return $this->notFound();
         }
 
@@ -133,11 +125,11 @@ class PurchaseController extends Controller
      */
     public function toggleStatus($id, $status)
     {
-        $status = $status == 'true' ;
+        $status = $status == 'true';
 
         $resource = Purchase::find($id);
 
-        if(!$resource){
+        if (!$resource) {
             return $this->notFound();
         }
 
@@ -147,5 +139,44 @@ class PurchaseController extends Controller
         $action = $status ? 'activated' : 'deactivated';
 
         return $this->success("$this->resourceName successfully {$action}");
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    protected function formatDetails($data): array
+    {
+        $details = $data['details'];
+
+        $details = array_map(function ($detail) {
+            return new PurchaseDetail($detail);
+        }, $details);
+        return $details;
+    }
+
+    /**
+     * @param $data
+     * @param $payType
+     * @return Purchase
+     */
+    protected function createPurchase($data, $payType): Purchase
+    {
+        $details = $this->formatDetails($data);
+
+        $purchase = new Purchase([
+            'created_by' => Helper::getUserId(),
+            'customer_id' => $data['customer'],
+            'branch_id' => $data['branch'],
+            'is_active' => true,
+            'amount_paid' => $data['amount_paid'],
+            'payment_type_id' => $payType->id
+        ]);
+
+        DB::transaction(function () use ($purchase, $details) {
+            $purchase->save();
+            $purchase->details()->saveMany($details);
+        });
+        return $purchase;
     }
 }
