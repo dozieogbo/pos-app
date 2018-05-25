@@ -61,9 +61,9 @@ class CustomerController extends Controller
 
         $customer->created_by = Helper::getUserId();
 
-        try{
+        try {
             $customer->save();
-        }catch (Exception $bug){
+        } catch (Exception $bug) {
             return $this->exception($bug);
         }
 
@@ -74,14 +74,26 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $customer = Customer::with('creator')->find($id);
 
-        if(!$customer){
+        if (!$customer) {
+            return $this->notFound();
+        }
+
+        return $this->success($customer);
+    }
+
+    public function showByPhone($phone)
+    {
+        $customer = Customer::wherePhone($phone)
+            ->first();
+
+        if (!$customer) {
             return $this->notFound();
         }
 
@@ -101,7 +113,7 @@ class CustomerController extends Controller
 
         $customer = Customer::find($id);
 
-        if(!$customer){
+        if (!$customer) {
             return $this->notFound();
         }
 
@@ -110,7 +122,7 @@ class CustomerController extends Controller
 
         try {
             $customer->save();
-        }catch (Exception $bug){
+        } catch (Exception $bug) {
             return $this->exception($bug);
         }
 
@@ -120,14 +132,14 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $resource = Customer::find($id);
 
-        if(!$resource){
+        if (!$resource) {
             return $this->notFound();
         }
 
@@ -144,11 +156,11 @@ class CustomerController extends Controller
      */
     public function toggleStatus($id, $status)
     {
-        $status = $status == 'true' ;
+        $status = $status == 'true';
 
         $resource = Customer::find($id);
 
-        if(!$resource){
+        if (!$resource) {
             return $this->notFound();
         }
 

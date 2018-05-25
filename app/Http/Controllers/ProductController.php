@@ -110,6 +110,18 @@ class ProductController extends Controller
 
     }
 
+    public function showByBarcode($barcode)
+    {
+        $resource = Product::whereBarcode($barcode)->first();
+
+        if (!$resource) {
+            return $this->notFound();
+        }
+
+        return $this->success("$this->resourceName fetched successfully", $resource);
+
+    }
+
     /**
      * Update the specified resource in storage.
      *

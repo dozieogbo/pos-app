@@ -17,6 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::put('customers/{id}/toggle/{status}', ['uses' => 'CustomerController@toggleStatus', 'as' => 'customers.status']);
+Route::put('customers/phone/{phone}', ['uses' => 'CustomerController@showByPhone', 'as' => 'customers.phone']);
+Route::get('customers/active', ['uses' => 'CustomerController@active', 'as' => 'customers.active']);
+
 Route::put('categories/{id}/toggle/{status}', ['uses' => 'CategoryController@toggleStatus', 'as' => 'categories.status']);
 Route::get('categories/active', ['uses' => 'CategoryController@active', 'as' => 'categories.active']);
 
@@ -40,6 +45,7 @@ Route::get('staffs/branch/{branch}/active', ['uses' => 'StaffController@active',
 Route::get('staffs/active', ['uses' => 'StaffController@active', 'as' => 'staffs.active']);
 
 Route::get('products/category/{category}', ['uses' => 'ProductController@index', 'as' => 'products.category']);
+Route::get('products/barcode/{barcode}', ['uses' => 'ProductController@showByBarcode', 'as' => 'products.barcode']);
 Route::get('products/category/{category}/active', ['uses' => 'ProductController@active', 'as' => 'products.category.active']);
 Route::get('products/active', ['uses' => 'ProductController@active', 'as' => 'products.active']);
 Route::post('products/{id}/arrivals', ['uses' => 'ProductController@addArrival', 'as' => 'products.arrivals.add']);

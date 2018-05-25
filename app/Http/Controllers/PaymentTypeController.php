@@ -18,7 +18,7 @@ class PaymentTypeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth.role:super,admin')->except(['active']);
+//        $this->middleware('auth.role:super,admin')->except(['active']);
         $this->setResourceName('payment type');
     }
 
