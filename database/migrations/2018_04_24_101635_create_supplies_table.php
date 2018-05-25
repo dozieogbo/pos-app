@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateArrivalsTable extends Migration
+class CreateSuppliesTable extends Migration
 {
     /**
      * Run the migrations.
