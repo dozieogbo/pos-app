@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::put('customers/{id}/toggle/{status}', ['uses' => 'CustomerController@toggleStatus', 'as' => 'customers.status']);
-Route::put('customers/phone/{phone}', ['uses' => 'CustomerController@showByPhone', 'as' => 'customers.phone']);
+Route::get('customers/phone/{phone}', ['uses' => 'CustomerController@showByPhone', 'as' => 'customers.phone']);
 Route::get('customers/active', ['uses' => 'CustomerController@active', 'as' => 'customers.active']);
 
 Route::put('categories/{id}/toggle/{status}', ['uses' => 'CategoryController@toggleStatus', 'as' => 'categories.status']);

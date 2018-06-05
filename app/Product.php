@@ -22,9 +22,9 @@ class Product extends TogglableModel
     }
 
     //Mutators and Accessors
-    public function getPriceAttribute($value){
-        return number_format($value);
-    }
+//    public function getPriceAttribute($value){
+//        return number_format($value);
+//    }
 
     //Relationships
     public function category(){

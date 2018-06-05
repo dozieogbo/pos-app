@@ -67,7 +67,7 @@ class CustomerController extends Controller
             return $this->exception($bug);
         }
 
-        return $this->success($customer);
+        return $this->success($this->resourceName.'has been created successfully', $customer);
 
     }
 
@@ -85,7 +85,7 @@ class CustomerController extends Controller
             return $this->notFound();
         }
 
-        return $this->success($customer);
+        return $this->success( $this->resourceName.' was fetched successfully.', $customer);
     }
 
     public function showByPhone($phone)
@@ -97,7 +97,7 @@ class CustomerController extends Controller
             return $this->notFound();
         }
 
-        return $this->success($customer);
+        return $this->success( $this->resourceName.' was fetched successfully.', $customer);
     }
 
     /**
