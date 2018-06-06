@@ -4,7 +4,7 @@ namespace App;
 
 class Purchase extends TogglableModel
 {
-    protected $fillable = ['customer_id', 'created_by', 'branch_id', 'is_active'];
+    protected $fillable = ['customer_id', 'created_by', 'branch_id', 'is_active', 'amount_paid', 'payment_type_id' ];
     protected $hidden = ['created_by', 'updated_at','customer_id', 'branch_id'];
 
     public function details(){

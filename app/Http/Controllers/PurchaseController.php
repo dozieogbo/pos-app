@@ -64,7 +64,7 @@ class PurchaseController extends Controller
         $data = $request->validated();
 
         $payType = PaymentType
-            ::hasName($data['name']);
+            ::hasName($data['pay_type'])->first();
 
         if (!$payType) {
             return $this->failure("Payment type doesn't exist");

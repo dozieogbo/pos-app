@@ -19,6 +19,7 @@ class UserResource extends JsonResource
            'name' => $this->name,
            'staff_id' => $this->staff_id,
             'gender' => $this->gender,
+            'branch' => $this->branchDetail ? $this->branchDetail->branch : null,
             'roles' => $this->roles->map(function ($item){ return $item->name; })
         ];
     }
