@@ -76,7 +76,7 @@ class BranchController extends Controller
      */
     public function show($id)
     {
-        $resource = Branch::find($id);
+        $resource = Branch::with('state')->find($id);
 
         if(!$resource){
             return $this->notFound();
